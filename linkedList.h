@@ -1,18 +1,21 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include"fbDraw.h"
+#include "fbDraw.h"
+#include "structure.h"
 
-typedef struct 
+typedef struct Node
 {
     ball *data;
-    node *next;
+    struct Node *next;
 }node;
 
-void appendNode(node* head, ball new_data);
+void appendNode(node* head, ball* new_data);
 
 void deleteNode(node* head, int nodeNum);
 
 void modifyNode(node* head, node* selectedNode, ball new_data);
+
+void PrintInfo(node* head);
 
 #endif

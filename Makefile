@@ -1,2 +1,2 @@
-fb : fbDraw.cpp main.cpp
-	gcc -o $@ $^
+fb : linkedList.cpp fbDraw.cpp main.cpp
+	g++ -o $@ $^

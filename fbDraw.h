@@ -2,14 +2,7 @@
 #ifndef __FBDRAW_H__
 #define __FBDRAW_H__
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <string.h>
-#include <linux/fb.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
+#include"structure.h"
 
 #define FB_OPEN_FAIL 1
 #define FB_GET_FINFO_FAIL 2
@@ -17,33 +10,6 @@
 #define FB_MMAP_FAIL 4
 #define DIAMETER 10
 typedef unsigned char uchar;
-
-typedef struct dev_fb_t
-{
-	int fbfd;
-	struct fb_var_screeninfo vinfo;
-	struct fb_fix_screeninfo finfo;
-	long int screensize;
-	char *fbp;
-}dev_fb;
-
-typedef struct pixel_t
-{
-	int x;
-	int y;
-}pixel;
-
-typedef struct {
-	int speed;
-    int dx; //case: -1, 0, 1
-    int dy; //case: -1, 0, 1
-} Speed;
-
-typedef struct ball_t
-{
-	pixel *pos;
-	Speed *speed;
-}ball;
 
 int fb_init(dev_fb* fb);
 pixel fb_toPixel(int x,int y);
