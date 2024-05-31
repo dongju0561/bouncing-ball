@@ -6,15 +6,15 @@
 
 typedef struct Node
 {
-    ball *data;
+    Ball *data;
     struct Node *next;
 }node;
 
-void appendNode(node* head, ball* new_data);
+void appendNode(node* head, Ball* new_data);
 
 void deleteNode(node* head, int nodeNum);
 
-void modifyNode(node* head, node* selectedNode, ball new_data);
+void modifyNode(node* head, node* selectedNode, Ball new_data);
 
 void PrintInfo(node* head);
 

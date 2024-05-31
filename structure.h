@@ -35,7 +35,7 @@ typedef struct
 {
 	pixel pos;
 	Speed speed;
-}ball;
+}Ball;
 
 
 

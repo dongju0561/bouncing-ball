@@ -5,11 +5,11 @@
 #include "fbDraw.h"
 
 
-void appendNode(node* head, ball* new_data) {
+void appendNode(node* head, Ball* new_data) {
     //노드 메모리 할당
     node* new_node = (node*)malloc(sizeof(node));
     //노드 내 데이터(_tPersonalInfo타입) 메모리 할당
-    new_node->data = (ball*)malloc(sizeof(ball));
+    new_node->data = (Ball*)malloc(sizeof(Ball));
 
     if (new_node->data == NULL)
     {
