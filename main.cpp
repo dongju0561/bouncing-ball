@@ -11,6 +11,9 @@ int data_available = 0;
 char buffer[BUFFER_SIZE];
 char cmd;
 char preCMD;
+
+int speed = 10000;
+
 static pthread_cond_t buffer_cond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t buffer_mutex = PTHREAD_MUTEX_INITIALIZER;
 
@@ -26,9 +29,7 @@ void *inputCMD(void *arg){
     while (1) {
         char input[BUFFER_SIZE];
         // 표준 입력에서 문자열을 읽음
-        puts("입력 하세요.");
-        puts("a : 공 추가");
-        puts("s : 스피드 증가");
+
         if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
             break;
         }
@@ -68,18 +69,16 @@ void *processCMD(void *arg){
         switch (buffer[0])
         {
         case 'a':
-            puts("공을 추가 하였습니다.");
             pthread_mutex_lock(&ball_mutex);
             pthread_cond_signal(&ball_cond);
             pthread_mutex_unlock(&ball_mutex);
             break;
 
         case 's':
-            puts("스피드를 증가하였습니다.");
+            speed -= 500;
             break;
 
         default:
-            puts("다시 입력하세요!");
             break;
         }
         
@@ -114,7 +113,7 @@ void* ball_thread_func(void *arg) {
 
         fb_drawFilledCircle(fb, fb_toPixel(b1->pos.x,b1->pos.y),0,0,0);  // erase ball at old position
         
-        usleep(10000);  // delay for smooth animation
+        usleep(speed);  // delay for smooth animation
     }
     return NULL;
 }
@@ -123,15 +122,18 @@ int main() {
     pthread_t input, processor, thread[BALL_NUM];
     ThreadArgs *args[BALL_NUM];
     Ball *balls[BALL_NUM];
-    dev_fb fb;
-    memset(&fb, 0, sizeof(dev_fb));
     srand(time(NULL));
 
+    //프레임버퍼 초기화
+    dev_fb fb;
+    memset(&fb, 0, sizeof(dev_fb));
+    
     fb_init(&fb);
     
-    // Fill screen with a test value
+    // 흰색 환명으로 칠함
     fb_fillScr(&fb, 255, 255, 255);
 
+    //스레드 생성
     pthread_create(&input, NULL, inputCMD, NULL);
     pthread_create(&processor, NULL, processCMD, NULL);
 
@@ -161,15 +163,17 @@ int main() {
     }
 
 
+    
+    pthread_join(input, NULL);
+    pthread_join(processor, NULL);
+
     for(int i = 0; i < 5; i++){
         pthread_join(thread[i], NULL);
     }
-    pthread_join(input, NULL);
-    pthread_join(processor, NULL);
     
     // Cleanup
-    // munmap(fb.fbp, fb.screensize);
-    // close(fb.fbfd);
+    munmap(fb.fbp, fb.screensize);
+    close(fb.fbfd);
 
     // node *head = (node *)malloc(sizeof(node));
 
