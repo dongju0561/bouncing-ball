@@ -27,8 +27,8 @@ typedef struct pixel_t
 
 typedef struct {
 	int speed;
-    int dx; //case: -1, 0, 1
-    int dy; //case: -1, 0, 1
+    int dx; //case: -1, 1
+    int dy; //case: -1, 1
 } Speed;
 
 typedef struct

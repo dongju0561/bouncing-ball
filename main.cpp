@@ -6,12 +6,9 @@
 #include <time.h>
 
 #define BUFFER_SIZE 256
-#define BALL_NUM 5
+#define BALL_NUM 10
 int data_available = 0;
 char buffer[BUFFER_SIZE];
-char cmd;
-char preCMD;
-
 int speed = 10000;
 
 static pthread_cond_t buffer_cond = PTHREAD_COND_INITIALIZER;
@@ -19,6 +16,8 @@ static pthread_mutex_t buffer_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static pthread_cond_t ball_cond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t ball_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+node *head = (node *)malloc(sizeof(node));
 
 typedef struct {
     dev_fb *fb;
@@ -49,12 +48,7 @@ void *inputCMD(void *arg){
     }
     return NULL;
 }
-/*
-두 종류 입력
-'a' = 공 추가
-'s' = 스피드 증가
-그 외 입력 = "다시  입력하세요!"
-*/
+
 void *processCMD(void *arg){
     while (1) {
         // 잠금 획득
@@ -68,16 +62,27 @@ void *processCMD(void *arg){
         // 버퍼의 데이터를 처리
         switch (buffer[0])
         {
+        /*
+        두 종류 입력
+        'a' = 공 추가
+        's' = 스피드 증가
+        'd' = 스피드 감소
+        그 외 입력 = 동작 없음
+        */
         case 'a':
             pthread_mutex_lock(&ball_mutex);
             pthread_cond_signal(&ball_cond);
             pthread_mutex_unlock(&ball_mutex);
             break;
-
         case 's':
-            speed -= 500;
+            speed -= 1000;
             break;
-
+        case 'd':
+            speed += 1000;
+            break;
+        case 'p':
+            PrintInfo(head);
+            break;
         default:
             break;
         }
@@ -127,7 +132,7 @@ int main() {
     //프레임버퍼 초기화
     dev_fb fb;
     memset(&fb, 0, sizeof(dev_fb));
-    
+
     fb_init(&fb);
     
     // 흰색 환명으로 칠함
@@ -137,18 +142,18 @@ int main() {
     pthread_create(&input, NULL, inputCMD, NULL);
     pthread_create(&processor, NULL, processCMD, NULL);
 
-    for(int i = 0; i < 5; i++){
+    for(int i = 0; i < BALL_NUM; i++){
         //ball 객체 생성
-        balls[i] = (Ball *)malloc(sizeof(Ball));
-        if (balls[i] == NULL) {
+        Ball *b = (Ball *)malloc(sizeof(Ball));
+        if (b == NULL) {
             perror("Memory allocation error");
             exit(EXIT_FAILURE);
         }
 
-        balls[i]->pos.x = rand() % 1281;
-        balls[i]->pos.y = rand() % 801;
-        balls[i]->speed.dx = (rand() % 2 == 0) ? 2 : -2;
-        balls[i]->speed.dy = (rand() % 2 == 0) ? 2 : -2;
+        b->pos.x = rand() % 1281;
+        b->pos.y = rand() % 801;
+        b->speed.dx = (rand() % 2 == 0) ? 2 : -2;
+        b->speed.dy = (rand() % 2 == 0) ? 2 : -2;
 
         //스레드에 fb객체와 ball객체를 한꺼번에 전달하기 위해 객체화
         args[i] = (ThreadArgs *)malloc(sizeof(ThreadArgs));
@@ -157,29 +162,23 @@ int main() {
             exit(EXIT_FAILURE);
         }
         args[i]->fb = &fb;
-        args[i]->ball = balls[i];
+        args[i]->ball = b;
+
+        appendNode(head, b);
 
         pthread_create(&thread[i], NULL, ball_thread_func, args[i]);
     }
-
-
     
     pthread_join(input, NULL);
     pthread_join(processor, NULL);
 
-    for(int i = 0; i < 5; i++){
+    for(int i = 0; i < BALL_NUM; i++){
         pthread_join(thread[i], NULL);
     }
     
     // Cleanup
     munmap(fb.fbp, fb.screensize);
     close(fb.fbfd);
-
-    // node *head = (node *)malloc(sizeof(node));
-
-    // appendNode(head, b1);
-
-    // PrintInfo(head);
 
     return 0;
 }
