@@ -4,6 +4,8 @@
 
 #include "fbDraw.h"
 
+dev_fb fb;
+
 int fb_init(dev_fb* fb)
 {
 	fb->fbfd=0;
@@ -37,12 +39,12 @@ pixel fb_toPixel(int x, int y)
 	px.y=y;
 	return px;
 }
-
+//전달 받은 좌표가 프래임버퍼가 출력할 수 있는 영역내에 있는지 확인하기 위한 함수
 int fb_checkPx(dev_fb* fb, int x, int y)
 {
  return(x>=0 && y>=0 && (unsigned int)x<fb->vinfo.xres && (unsigned int)y<fb->vinfo.yres);
 }
-
+//좌표 데이터로 프레임 버퍼 메모리 내의 위치를 계산하는 함수
 long int locate(dev_fb* fb, int x, int y)
 {
 	return (x+fb->vinfo.xoffset) * (fb->vinfo.bits_per_pixel/8) + (y+fb->vinfo.yoffset) * fb->finfo.line_length;

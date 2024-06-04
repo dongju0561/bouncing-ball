@@ -37,6 +37,10 @@ typedef struct
 	Speed speed;
 }Ball;
 
-
+typedef struct Node
+{
+    Ball *data;
+    struct Node *next;
+}node;
 
 #endif

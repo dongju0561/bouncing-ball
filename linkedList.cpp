@@ -4,6 +4,7 @@
 #include "linkedList.h"
 #include "fbDraw.h"
 
+node *head = (node *)malloc(sizeof(node));
 
 void appendNode(node* head, Ball* new_data) {
     //노드 메모리 할당
@@ -39,35 +40,6 @@ void appendNode(node* head, Ball* new_data) {
     last->next = new_node;
 }
 
-void deleteNode(node* head, int nodeNum) {
-    node* preNode = (node*)malloc(sizeof(node));
-    node* selectedNode = (node*)malloc(sizeof(node));
-    *selectedNode = *head;
-    FILE* file_pointer;
-
-    //노드번호와 맵핑된 노드 탐색
-    for (int i = 1; i <= nodeNum; i++)
-    {
-        preNode = selectedNode;
-        selectedNode = selectedNode->next;
-    }
-
-    //탐색한 노드의 "직전 노드"와 "다음 노드" 연결
-    
-    //다음 노드가 NULL인 경우
-    if (selectedNode->next == NULL)
-    {
-        preNode->next = NULL;
-    }
-    else 
-    {
-        preNode->next = selectedNode->next;
-    }
-
-    free(selectedNode->data);
-    free(selectedNode);   
-}
-
 void PrintInfo(node* head){
     int cnt = 0;
     node* last = (node*)malloc(sizeof(node));
@@ -91,21 +63,18 @@ void PrintInfo(node* head){
     }
 }
 
-// void modifyNode(node* head, node* selectedNode, ball new_data) {
-
-//     //수정할 데이터 입력
-//     printf("-----------------------------\n");
-//     printf("수정할 값을 입력하세요.\n");
-//     printf("나이를 입력하세요: ");
-//     scanf("%d", &nAge);
-//     printf("이름를 입력하세요: ");
-//     scanf("%s", szName);
-//     printf("번호를 입력하세요: ");
-//     scanf("%s", szPhone);
-
-//     //입력 받은 데이터 노드 데이터 영역에 패치
-//     selectedNode->data->nAge = nAge;
-//     snprintf(selectedNode->data->szName, sizeof(selectedNode->data->szName), "%s", szName); 
-//     snprintf(selectedNode->data->szPhone, sizeof(selectedNode->data->szPhone), "%s", szPhone);
-// }
-
+void close_list(node* head){
+    node* selectedNode = (node*)malloc(sizeof(node));
+    node* nextedNode = (node*)malloc(sizeof(node));
+    if (head->next != NULL) {
+        *selectedNode = *head->next;
+        *nextedNode = *head->next;
+        while (nextedNode->next != NULL) {
+            nextedNode = selectedNode->next;
+            free(selectedNode->data);
+            free(selectedNode);
+            selectedNode = nextedNode;
+        }
+    }
+    exit(1);
+}
