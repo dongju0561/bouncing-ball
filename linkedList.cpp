@@ -1,8 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include "linkedList.h"
-#include "fbDraw.h"
+#include "linkedList.hpp"
+#include "fbDraw.hpp"
 
 node *head = (node *)malloc(sizeof(node));
 

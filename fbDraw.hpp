@@ -2,7 +2,7 @@
 #ifndef __FBDRAW_H__
 #define __FBDRAW_H__
 
-#include"structure.h"
+#include"structure.hpp"
 
 #define FB_OPEN_FAIL 1
 #define FB_GET_FINFO_FAIL 2

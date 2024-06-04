@@ -1,4 +1,4 @@
-#include "thread.h"
+#include "thread.hpp"
 
 int data_available = 0;
 char buffer[BUFFER_SIZE];
@@ -59,6 +59,10 @@ void *processCMD(void *arg){
             pthread_cond_signal(&ball_cond);
             pthread_mutex_unlock(&ball_mutex);
             break;
+        case 'r':
+            pthread_mutex_lock(&ball_mutex);
+            pthread_cond_broadcast(&ball_cond);
+            pthread_mutex_unlock(&ball_mutex);
         case 's':
             speed -= 1000;
             break;

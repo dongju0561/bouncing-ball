@@ -1,9 +1,9 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-#include "fbDraw.h"
-#include "structure.h"
-#include "linkedList.h"
+#include "fbDraw.hpp"
+#include "structure.hpp"
+#include "linkedList.hpp"
 
 extern node *head;
 

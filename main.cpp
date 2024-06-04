@@ -1,7 +1,7 @@
-#include"fbDraw.h"
-#include"linkedList.h"
-#include"structure.h"
-#include"thread.h"
+#include"fbDraw.hpp"
+#include"linkedList.hpp"
+#include"structure.hpp"
+#include"thread.hpp"
 #include<unistd.h>
 #include<pthread.h>
 #include<stdbool.h>
@@ -9,24 +9,30 @@
 
 int main() {
     srand(time(NULL));
+
     pthread_t input, processor, thread[BALL_NUM];
     ThreadArgs *args[BALL_NUM];
+
     //프레임버퍼 초기화
     memset(&fb, 0, sizeof(dev_fb));
 
+    //프래임버퍼 초기화 진행 & 실패 시 에러 내용 출력 후 프로그램 종료
     int result = fb_init(&fb);
     if (result != 0) {
         fprintf(stderr, "Framebuffer initialization failed with error code %d\n", result);
-        // 오류에 따른 추가적인 처리를 할 수 있습니다.
+        exit(1);
     }
     
     // 흰색 환명으로 칠함
     fb_fillScr(&fb, 255, 255, 255);
 
     //스레드 생성
+    //입력 받기 위한 스레드
     pthread_create(&input, NULL, inputCMD, NULL);
+    //입력을 처리하는 스레드
     pthread_create(&processor, NULL, processCMD, NULL);
 
+    
     for(int i = 0; i < BALL_NUM; i++){
         //ball 객체 생성
         Ball *b = (Ball *)malloc(sizeof(Ball));

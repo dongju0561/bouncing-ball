@@ -3,12 +3,12 @@
 
 #include <stdio.h>
 #include <pthread.h>
-#include "linkedList.h"
+#include "linkedList.hpp"
 #include <stdlib.h>
 #include <string.h>
 
 #define BUFFER_SIZE 256
-#define BALL_NUM 10
+#define BALL_NUM 200
 
 typedef struct {
     dev_fb *fb;

@@ -2,10 +2,10 @@
 // Keith Lee
 // Dev Box
 
-#include "fbDraw.h"
+#include "fbDraw.hpp"
 
 dev_fb fb;
-
+ 
 int fb_init(dev_fb* fb)
 {
 	fb->fbfd=0;
@@ -48,7 +48,7 @@ int fb_checkPx(dev_fb* fb, int x, int y)
 long int locate(dev_fb* fb, int x, int y)
 {
 	return (x+fb->vinfo.xoffset) * (fb->vinfo.bits_per_pixel/8) + (y+fb->vinfo.yoffset) * fb->finfo.line_length;
-}
+} 
 
 void fb_drawPixelPx(dev_fb* fb, pixel px, char r, char g, char b)
 {
