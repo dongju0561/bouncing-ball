@@ -6,7 +6,8 @@
 
 node *head = (node *)malloc(sizeof(node));
 
-void appendNode(node* head, Ball* new_data) {
+void appendNode(node* head, Ball* new_data) 
+{
     //노드 메모리 할당
     node* new_node = (node*)malloc(sizeof(node));
     //노드 내 데이터(_tPersonalInfo타입) 메모리 할당
@@ -27,30 +28,34 @@ void appendNode(node* head, Ball* new_data) {
     //linked list에 노드 추가
     node* last = head;
 
-    if (last->next == NULL) {
+    if (last->next == NULL) 
+    {
         last->next = new_node;
         return;
     }
 
     //끝에 노드 탐색
-    while (last->next != NULL) {
+    while (last->next != NULL)
         last = last->next;
-    }
+
     //탐색 후 새로운 노드 추가
     last->next = new_node;
 }
 
-void PrintInfo(node* head){
+void PrintInfo(node* head)
+{
     int cnt = 0;
     node* last = (node*)malloc(sizeof(node));
 
-    if (head == NULL) {
+    if (head == NULL) 
+    {
         printf("list is empty");
         return;
     }
 
     *last = *head->next;
-    while (last != NULL) {
+    while (last != NULL) 
+    {
         cnt += 1;
         int dx = last->data->speed.dx * last->data->speed.speed;
         int dy = last->data->speed.dy * last->data->speed.speed;
@@ -63,13 +68,16 @@ void PrintInfo(node* head){
     }
 }
 
-void close_list(node* head){
+void close_list(node* head)
+{
     node* selectedNode = (node*)malloc(sizeof(node));
     node* nextedNode = (node*)malloc(sizeof(node));
-    if (head->next != NULL) {
+    if (head->next != NULL) 
+    {
         *selectedNode = *head->next;
         *nextedNode = *head->next;
-        while (nextedNode->next != NULL) {
+        while (nextedNode->next != NULL) 
+        {
             nextedNode = selectedNode->next;
             free(selectedNode->data);
             free(selectedNode);

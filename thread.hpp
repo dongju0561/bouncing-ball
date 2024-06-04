@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 5
 #define BALL_NUM 200
 
 typedef struct {

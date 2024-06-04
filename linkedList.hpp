@@ -2,7 +2,7 @@
 #define LINKEDLIST_H
 
 #include "fbDraw.hpp"
-#include "structure.hpp"
+#include "common.hpp"
 #include "linkedList.hpp"
 
 extern node *head;
@@ -14,4 +14,4 @@ void PrintInfo(node* head);
 //리스트를 순회하면서 노드들의 메모리 할당을 해제하는 함수
 void close_list(node* head);
 
-#endif
+#endif // LINKEDLIST_H

@@ -27,7 +27,7 @@ int fb_init(dev_fb* fb)
 		return FB_MMAP_FAIL;
 	}
 
-fprintf( stderr, "[FB] %d x %d\n", (int)fb->vinfo.xres, (int)fb->vinfo.yres );
+	fprintf( stderr, "[FB] %d x %d\n", (int)fb->vinfo.xres, (int)fb->vinfo.yres );
 
 	return 0;
 }

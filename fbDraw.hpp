@@ -1,8 +1,7 @@
-
 #ifndef __FBDRAW_H__
 #define __FBDRAW_H__
 
-#include"structure.hpp"
+#include"common.hpp"
 
 #define FB_OPEN_FAIL 1
 #define FB_GET_FINFO_FAIL 2
@@ -60,4 +59,4 @@ void fb_drawFilledCircle(dev_fb* fb, pixel center,char r, char g, char b);
 void fb_close(dev_fb* fb);
 
 
-#endif
+#endif//__FBDRAW_H__

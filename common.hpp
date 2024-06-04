@@ -1,5 +1,5 @@
-#ifndef STRUCTURE_H
-#define STRUCTURE_H
+#ifndef COMMON_H
+#define COMMON_H
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -25,7 +25,8 @@ typedef struct pixel_t
 	int y;
 }pixel;
 
-typedef struct {
+typedef struct 
+{
 	int speed;
     int dx; //case: -1, 1
     int dy; //case: -1, 1
@@ -43,4 +44,4 @@ typedef struct Node
     struct Node *next;
 }node;
 
-#endif
+#endif// COMMON_H
