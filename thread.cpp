@@ -5,11 +5,16 @@ char buffer[BUFFER_SIZE];
 
 // 공 속도 변수
 int speed = 10000;
- 
+
 pthread_cond_t buffer_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t buffer_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t ball_cond = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t ball_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+pthread_t input, processor, thread[BALL_NUM];
+ThreadArgs *args[BALL_NUM];
+
+int thread_index = 0;
 
 //사용자 입력 받는 스레드 함수
 void *inputCMD(void *arg)
@@ -63,9 +68,43 @@ void *processCMD(void *arg)
         switch (buffer[0]) 
         {
         case 'a':
-            pthread_mutex_lock(&ball_mutex);
-            pthread_cond_signal(&ball_cond);
-            pthread_mutex_unlock(&ball_mutex);
+            //ball 객체 생성
+            Ball *b = (Ball *)malloc(sizeof(Ball));
+            if (b == NULL) {
+                perror("Memory allocation error");
+                exit(EXIT_FAILURE);
+            }
+            //ball 객체 난수값으로 초기화
+
+            //해상도: 1280x800 기준
+            //가로 난수: 0~1280
+            //세로 난수: 0~800
+            b->pos.x = rand() % fb.vinfo.xres + 1;
+            b->pos.y = rand() % fb.vinfo.yres + 1;
+            b->speed.dx = (rand() % 2 == 0) ? 2 : -2;
+            b->speed.dy = (rand() % 2 == 0) ? 2 : -2;
+
+            //스레드에 framebuffer객체와 ball객체를 한꺼번에 전달하기 위해 객체화
+            ThreadArgs *args = (ThreadArgs *)malloc(sizeof(ThreadArgs));
+            if (args == NULL) 
+            {
+                perror("Memory allocation error");
+                exit(EXIT_FAILURE);
+            }
+            //인자들의 묶음 객체(args) 초기화
+            args->fb = &fb;
+            args->ball = b;
+
+            appendNode(head, b);
+
+            pthread_create(&thread[thread_index++], NULL, ball_thread_func, args);
+            //스레드를 추가할때 마다 인덱스 증가
+
+            break;
+        case 'z':
+            //스레드 삭제 및 메모리 해제
+            pthread_cancel(thread[thread_index - 1]);
+            
             break;
         case 's':
             speed -= 1000;
@@ -95,11 +134,6 @@ void *processCMD(void *arg)
 //프래임버퍼 데이터와 ball 객체를 전달 받아 프래임버퍼에 ball의 데이터에 따라 화면에 출력하는 스레드 함수
 void* ball_thread_func(void *arg) 
 {
-    //스레드 함수 실행과 동시에 스레드 대기
-    pthread_mutex_lock(&ball_mutex);
-    pthread_cond_wait(&ball_cond, &ball_mutex);
-    pthread_mutex_unlock(&ball_mutex);
-
     ThreadArgs *argt = (ThreadArgs *) arg;
     
     dev_fb *fb = argt->fb;

@@ -3,12 +3,14 @@
 #include"common.hpp"
 #include"thread.hpp"
 
+extern pthread_t input, processor, thread[BALL_NUM];
+
 int main() 
 {
+    //난수를 위한 시드 생성
     srand(time(NULL));
 
-    pthread_t input, processor, thread[BALL_NUM];
-    ThreadArgs *args[BALL_NUM];
+    
 
     //프레임버퍼 초기화
     memset(&fb, 0, sizeof(dev_fb));
@@ -21,7 +23,7 @@ int main()
         exit(1);
     }
     
-    // 흰색 환명으로 칠함
+    // 흰색 화면으로 칠함
     fb_fillScr(&fb, 255, 255, 255);
 
     //스레드 생성
@@ -32,36 +34,7 @@ int main()
 
     for(int i = 0; i < BALL_NUM; i++)
     {
-        //ball 객체 생성
-        Ball *b = (Ball *)malloc(sizeof(Ball));
-        if (b == NULL) {
-            perror("Memory allocation error");
-            exit(EXIT_FAILURE);
-        }
-        //ball 객체 난수값으로 초기화
-
-        //해상도: 1280x800 기준
-        //가로 난수: 0~1280
-        //세로 난수: 0~800
-        b->pos.x = rand() % fb.vinfo.xres + 1;
-        b->pos.y = rand() % fb.vinfo.yres + 1;
-        b->speed.dx = (rand() % 2 == 0) ? 2 : -2;
-        b->speed.dy = (rand() % 2 == 0) ? 2 : -2;
-
-        //스레드에 framebuffer객체와 ball객체를 한꺼번에 전달하기 위해 객체화
-        args[i] = (ThreadArgs *)malloc(sizeof(ThreadArgs));
-        if (args[i] == NULL) 
-        {
-            perror("Memory allocation error");
-            exit(EXIT_FAILURE);
-        }
-        //인자들의 묶음 객체(args) 초기화
-        args[i]->fb = &fb;
-        args[i]->ball = b;
-
-        appendNode(head, b);
-
-        pthread_create(&thread[i], NULL, ball_thread_func, args[i]);
+        
     }
     
     //스레드들 join 진행 
