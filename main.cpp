@@ -32,10 +32,6 @@ int main()
     //입력을 처리하는 스레드
     pthread_create(&processor, NULL, processCMD, NULL);
 
-    for(int i = 0; i < BALL_NUM; i++)
-    {
-        
-    }
     
     //스레드들 join 진행 
     pthread_join(input, NULL);

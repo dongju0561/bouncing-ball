@@ -6,13 +6,12 @@
 
 node *head = (node *)malloc(sizeof(node));
 
-void appendNode(node* head, Ball* new_data) 
+void append_node(node* head, Ball* new_data) 
 {
     //노드 메모리 할당
     node* new_node = (node*)malloc(sizeof(node));
     //노드 내 데이터(_tPersonalInfo타입) 메모리 할당
     new_node->data = (Ball*)malloc(sizeof(Ball));
-
     if (new_node->data == NULL)
     {
         printf("Memory allocation failed\n");
@@ -42,12 +41,35 @@ void appendNode(node* head, Ball* new_data)
     last->next = new_node;
 }
 
+void delete_last_node(node* head) {
+    if (head->next == NULL)
+    {
+        return;
+    }
+    node* preNode = (node*)malloc(sizeof(node));
+    node* selectedNode = (node*)malloc(sizeof(node));
+    *preNode = *head;
+    *selectedNode = *head->next;
+    FILE* file_pointer;
+
+    //마지막 노드 탐색
+    while (selectedNode->next != NULL)
+    {
+        preNode = selectedNode;
+        selectedNode = selectedNode->next;
+    }
+    preNode->next = NULL;
+
+    free(selectedNode->data);
+    free(selectedNode);   
+}
+
 void PrintInfo(node* head)
 {
     int cnt = 0;
     node* last = (node*)malloc(sizeof(node));
 
-    if (head == NULL) 
+    if (head->next == NULL) 
     {
         printf("list is empty");
         return;
@@ -84,5 +106,9 @@ void close_list(node* head)
             selectedNode = nextedNode;
         }
     }
+    free(head->data);
+    free(head->next);
+    free(head);
+
     exit(1);
 }

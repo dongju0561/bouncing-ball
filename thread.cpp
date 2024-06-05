@@ -45,6 +45,8 @@ void *inputCMD(void *arg)
 //입력 받은 값을 처리하는 스레드 함수 
 void *processCMD(void *arg)
 {
+    Ball *b;
+    ThreadArgs *args;
     while (1) 
     {
         // 잠금 획득
@@ -68,13 +70,13 @@ void *processCMD(void *arg)
         switch (buffer[0]) 
         {
         case 'a':
-            //ball 객체 생성
-            Ball *b = (Ball *)malloc(sizeof(Ball));
+            // ball 객체 생성
+            b = (Ball *)malloc(sizeof(Ball));
             if (b == NULL) {
                 perror("Memory allocation error");
                 exit(EXIT_FAILURE);
             }
-            //ball 객체 난수값으로 초기화
+            // ball 객체 난수값으로 초기화
 
             //해상도: 1280x800 기준
             //가로 난수: 0~1280
@@ -85,26 +87,30 @@ void *processCMD(void *arg)
             b->speed.dy = (rand() % 2 == 0) ? 2 : -2;
 
             //스레드에 framebuffer객체와 ball객체를 한꺼번에 전달하기 위해 객체화
-            ThreadArgs *args = (ThreadArgs *)malloc(sizeof(ThreadArgs));
+            args = (ThreadArgs *)malloc(sizeof(ThreadArgs));
             if (args == NULL) 
             {
                 perror("Memory allocation error");
                 exit(EXIT_FAILURE);
             }
-            //인자들의 묶음 객체(args) 초기화
+            // //인자들의 묶음 객체(args) 초기화
             args->fb = &fb;
             args->ball = b;
 
-            appendNode(head, b);
+            append_node(head, b);
 
             pthread_create(&thread[thread_index++], NULL, ball_thread_func, args);
             //스레드를 추가할때 마다 인덱스 증가
 
             break;
         case 'z':
-            //스레드 삭제 및 메모리 해제
-            pthread_cancel(thread[thread_index - 1]);
+            //스레드 삭제
+            thread_index = thread_index - 1;
+            pthread_cancel(thread[thread_index]);
             
+            //메모리 해제
+            delete_last_node(head);
+
             break;
         case 's':
             speed -= 1000;
@@ -112,12 +118,16 @@ void *processCMD(void *arg)
         case 'd':
             speed += 1000;
             break;
+        case 'p':
+            PrintInfo(head);
+            break;
         case 'x':
             // 프로그램 종료
+            exit(1);
             close_list(head);
             // 프래임버퍼 메모리 해제
             fb_close(&fb);
-            exit(1);
+            
             break;
         default:
             break;
@@ -131,13 +141,25 @@ void *processCMD(void *arg)
     }
     return NULL;
 }
+
+void cleanup(void *arg) {
+    ThreadArgs *argt = (ThreadArgs *) arg;
+    dev_fb *fb = argt->fb;
+    Ball *b1 = argt->ball;
+
+    fb_drawFilledCircle(fb, fb_toPixel(b1->pos.x, b1->pos.y), 255, 255, 255);
+}
+
 //프래임버퍼 데이터와 ball 객체를 전달 받아 프래임버퍼에 ball의 데이터에 따라 화면에 출력하는 스레드 함수
+
 void* ball_thread_func(void *arg) 
 {
     ThreadArgs *argt = (ThreadArgs *) arg;
     
     dev_fb *fb = argt->fb;
     Ball *b1 = argt->ball;
+
+    pthread_cleanup_push(cleanup, (void *)argt);
 
     while (1) 
     {
@@ -158,4 +180,6 @@ void* ball_thread_func(void *arg)
         usleep(speed);  // delay for smooth animation
     }
     return NULL;
+
+    pthread_cleanup_pop(0);
 }

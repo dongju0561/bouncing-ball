@@ -28,6 +28,7 @@ extern pthread_mutex_t ball_mutex;
 
 void *inputCMD(void *arg);
 void *processCMD(void *arg);
+void cleanup(void *arg);
 void* ball_thread_func(void *arg);
 
 #endif // THREAD_H
