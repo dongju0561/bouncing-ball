@@ -55,7 +55,7 @@ void delete_last_node(node* head) {
     free(curr);
 }
 
-void PrintInfo(node* head)
+void print_info(node* head)
 {
     if (head == NULL || head->next == NULL) {
         printf("list is empty\n");
@@ -89,9 +89,5 @@ void close_list(node* head)
         free(curr);
         curr = next;
     }
-    free(head->data);
-    free(head->next);
-    free(head);
-
     exit(1);
 }

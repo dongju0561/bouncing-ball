@@ -23,12 +23,11 @@ extern ThreadArgs *args[BALL_NUM];
 extern int speed;
 extern pthread_cond_t buffer_cond;
 extern pthread_mutex_t buffer_mutex;
-extern pthread_cond_t ball_cond;
-extern pthread_mutex_t ball_mutex;
 
-void *inputCMD(void *arg);
-void *processCMD(void *arg);
-void cleanup(void *arg);
-void* ball_thread_func(void *arg);
+void *input_CMD(void *arg);
+void *process_CMD(void *arg);
+void clean_up(void *arg);
+void *ball_thread_func(void *arg);
+void add_ball(void *arg);
 
 #endif // THREAD_H

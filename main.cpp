@@ -3,14 +3,12 @@
 #include"common.hpp"
 #include"thread.hpp"
 
-extern pthread_t input, processor, thread[BALL_NUM];
+extern pthread_t input, processor, threads[BALL_NUM];
 
 int main() 
 {
     //난수를 위한 시드 생성
     srand(time(NULL));
-
-    
 
     //프레임버퍼 초기화
     memset(&fb, 0, sizeof(dev_fb));
@@ -28,9 +26,9 @@ int main()
 
     //스레드 생성
     //입력 받기 위한 스레드
-    pthread_create(&input, NULL, inputCMD, NULL);
+    pthread_create(&input, NULL, input_CMD, NULL);
     //입력을 처리하는 스레드
-    pthread_create(&processor, NULL, processCMD, NULL);
+    pthread_create(&processor, NULL, process_CMD, NULL);
 
     
     //스레드들 join 진행 
@@ -38,7 +36,7 @@ int main()
     pthread_join(processor, NULL);
 
     for(int i = 0; i < BALL_NUM; i++)
-        pthread_join(thread[i], NULL);
+        pthread_join(threads[i], NULL);
 
     return 0;
 }
