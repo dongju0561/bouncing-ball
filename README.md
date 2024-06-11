@@ -1,4 +1,4 @@
-# recordEvent
+# bouncing-ball
 
 ## Introduction
 
@@ -30,6 +30,8 @@
     ```
 
 # Example command to run the project
+- ctrl + Shift + F2~F5 입력(가상 콘솔로 이동)
+- 클론한 디렉토리로 이동
 ```sh
 sudo ./fb
 ```
