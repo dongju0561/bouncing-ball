@@ -1,6 +1,7 @@
 # bouncing-ball
 
 ## Introduction
+공 객체를 생성하고 공의 위치 데이터에 따라 프레임버퍼 상에 출력하는 프로그램입니다.
 
 ## Tech stack
 - 프레임버퍼
@@ -31,7 +32,11 @@
 
 # Example command to run the project
 - ctrl + Shift + F2~F5 입력(가상 콘솔로 이동)
-- 클론한 디렉토리로 이동
+- 프로젝트 디렉토리로 이동:
+```sh
+cd frameBuffer
+```
+- 빌드한 파일 실행
 ```sh
 sudo ./fb
 ```
